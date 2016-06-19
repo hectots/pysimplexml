@@ -1,0 +1,15 @@
+<tree>
+	<branch>
+		Branch 1
+		<leaf>One</leaf>
+		<branch>
+			<leaf>Two</leaf>
+			<leaf>Three</leaf>
+		</branch>
+		<leaf>Five</leaf>
+	</branch>
+	<branch>
+		Branch 2
+		<leaf>Six</leaf>
+	</branch>
+</tree>

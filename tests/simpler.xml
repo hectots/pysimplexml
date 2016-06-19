@@ -1,0 +1,10 @@
+<store>
+	<product category="Vehicles">
+		<name>Car</name>
+		<price>$5,000</price>
+	</product>
+	<product category="Electronics">
+		<name>Video Game Console</name>
+		<price>$250</price>
+	</product>
+</store>
