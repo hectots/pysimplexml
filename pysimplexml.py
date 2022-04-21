@@ -89,7 +89,7 @@ class Node(dict):
 		self.tag = tag
 	
 	def __str__(self):
-		if self.__dict__.has_key('value'):
+		if 'value' in self.__dict__:
 			return self.value.strip()
 		else:
 			return ""
@@ -113,7 +113,7 @@ class Node(dict):
 	
 	def hasAttribute(self, name):
 		"""Check if the none have an attribute with the name specified."""
-		return self.has_key(name)
+		return name in self
 	
 	def hasChild(self, name):
 		"""Check if the none have a child with the name specified."""
@@ -121,7 +121,7 @@ class Node(dict):
 	
 	def hasChildren(self):
 		"""Returns true if the node has children; false otherwise."""
-		for member in self.__dict__.values():
+		for member in list(self.__dict__.values()):
 			if isinstance(member, Node):
 				return True
 		return False
@@ -129,15 +129,15 @@ class Node(dict):
 	def getChildren(self, childs_filter=None):
 		"""Returns a list of the children of this node."""
 		childs = []
-		for member in self.__dict__.values():
+		for member in list(self.__dict__.values()):
 			if isinstance(member, Node):
 				childs.append(member)
 			elif isinstance(member, list):
-				if all(map(lambda m: isinstance(m, Node), member)):
+				if all([isinstance(m, Node) for m in member]):
 					childs.append(member)
 		
 		if childs_filter is not None:
-			childs = filter(childs_filter, childs)
+			childs = list(filter(childs_filter, childs))
 		
 		return childs
 
@@ -155,11 +155,11 @@ class SimpleXmlHandler(xml.sax.ContentHandler):
 			self.current_node = self.root
 			self.ancestors = {tag:self.root}
 		else:
-			if not self.ancestors.has_key(tag):
+			if tag not in self.ancestors:
 				self.ancestors[tag] = self.current_node
 			else:
 				multiplier = 1
-				while self.ancestors.has_key(tag + (self.MARKER * multiplier)):
+				while tag + (self.MARKER * multiplier) in self.ancestors:
 					multiplier += 1
 				self.ancestors[tag + (self.MARKER * multiplier)] = self.current_node
 			
@@ -171,9 +171,9 @@ class SimpleXmlHandler(xml.sax.ContentHandler):
 				self.current_node = self.current_node.__getattribute__(tag)[0]
 	
 	def endElement(self, tag):
-		if self.ancestors.has_key(tag + self.MARKER):
+		if tag + self.MARKER in self.ancestors:
 			tag += self.MARKER
-			while self.ancestors.has_key(tag + self.MARKER):
+			while tag + self.MARKER in self.ancestors:
 				tag += self.MARKER
 		
 		self.current_node = self.ancestors[tag]
